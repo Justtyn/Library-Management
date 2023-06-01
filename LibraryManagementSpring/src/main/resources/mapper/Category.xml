@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.librarymanagementspring.mapper.CategoryMapper">
+
+    <resultMap id="categoryMap" type="com.example.librarymanagementspring.entity.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="pid" property="pid"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+        <collection column="id" property="children" ofType="com.example.librarymanagementspring.entity.Category" select="selectByPid"/>
+    </resultMap>
+
+    <select id="selectByPid" resultType="com.example.librarymanagementspring.entity.Category">
+        select * from category where pid = #{id}
+
+    </select>
+
+    <insert id="save">
+        insert into category (name,remark,pid) values(#{name},#{remark},#{pid})
+    </insert>
+
+    <update id="updateById">
+        update category set name = #{name},remark = #{remark} where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from category where id = #{id}
+    </delete>
+
+    <select id="list" resultType="com.example.librarymanagementspring.entity.Category">
+        select * from category order by id desc
+    </select>
+
+    <select id="listByCondition" resultMap="categoryMap">
+        select * from category
+        <where>
+            isnull(pid)
+            <if test="id != null and id != ''">
+                and id like concat('%',#{ id },'%')
+            </if>
+
+            <if test="name != null and name != ''">
+                and name like concat('%',#{ name },'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="getById" resultType="com.example.librarymanagementspring.entity.Category">
+        select * from category where id = #{id}
+    </select>
+
+    <select id="listByConditionAsc" resultMap="categoryMap">
+        select * from category
+        <where>
+            isnull(pid)
+            <if test="id != null and id != ''">
+                and id like concat('%',#{ id },'%')
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{ name },'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getByNameAndRemark" resultType="com.example.librarymanagementspring.entity.Category">
+        select * from category where name = #{name} and remark = #{remark}
+    </select>
+
+    <select id="nameCheckByName" resultType="com.example.librarymanagementspring.entity.Category">
+        select * from category where name = #{name}
+    </select>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.librarymanagementspring.mapper.BookMapper">
+
+    <insert id="save">
+        insert into book (name,description,publish_date,author,press,category,isbn,cover)
+        values(#{name},#{description},#{publish_date},#{author},#{press},#{category},#{cover})
+    </insert>
+
+    <update id="updateById">
+        update book set name = #{name},description = #{description} ,publish_date = #{publish_date},author = #{author},press = #{press},category = #{category},isbn = #{isbn},cover = #{cover}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from book where id = #{id}
+    </delete>
+
+    <select id="list" resultType="com.example.librarymanagementspring.entity.Book">
+        select * from book order by id desc
+    </select>
+
+    <select id="listByCondition" resultType="com.example.librarymanagementspring.entity.Book">
+        select * from book
+        <where>
+            <if test="id != null and id != ''">
+                id = #{id}
+            </if>
+
+            <if test="name != null and name != ''">
+                and name like concat('%',#{ name },'%')
+            </if>
+
+            <if test="isbn != null and isbn != ''">
+                and isbn = #{isbn}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="getById" resultType="com.example.librarymanagementspring.entity.Book">
+        select * from book where id = #{id}
+    </select>
+
+    <select id="listByConditionAsc" resultType="com.example.librarymanagementspring.entity.Book">
+        select * from book
+        <where>
+            <if test="id != null and id != ''">
+                id = #{id}
+            </if>
+
+            <if test="name != null and name != ''">
+                and name like concat('%',#{ name },'%')
+            </if>
+
+            <if test="isbn != null and isbn != ''">
+                and isbn = #{isbn}
+            </if>
+        </where>
+    </select>
+
+</mapper>
